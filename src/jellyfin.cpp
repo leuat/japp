@@ -120,9 +120,9 @@ void JellyfinAudioPlayer::onPlaybackStateChanged(QMediaPlayer::PlaybackState sta
     qDebug() << "Player State Changed:" << state;
 }
 
-void JellyfinAudioPlayer::connectAndPlayAudio(const QString &itemId) {
+void JellyfinAudioPlayer::auth() {
     auto doc = CreateDoc("/Users/AuthenticateByName", QJsonObject());
-    m_itemId = itemId;
+//    m_itemId = itemId;
     // Send request (ensure we use Compact json parsing to prevent payload corruption)
     QNetworkReply *reply = m_networkManager->post(*request, doc.toJson(QJsonDocument::Compact));
 
@@ -134,7 +134,11 @@ void JellyfinAudioPlayer::connectAndPlayAudio(const QString &itemId) {
 void JellyfinAudioPlayer::getData(const QString &id, QJsonObject json, int type)
 {
 //    auto doc = CreateDoc(id+"?api_key="+m_accessToken,json);
-    auto doc = CreateDoc("/Users/"+jinfo.sid+id,json);
+    QString path = id;
+    if (type==1)
+        path = "/Users/"+jinfo.sid+id;
+
+    auto doc = CreateDoc(path,json);
 
     // Send request (ensure we use Compact json parsing to prevent payload corruption)
     QNetworkReply *reply = m_networkManager->get(*request, doc.toJson(QJsonDocument::Compact));

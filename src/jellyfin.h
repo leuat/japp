@@ -23,11 +23,12 @@ class JellyfinAudioPlayer : public QObject {
 
 public:
     QString m_accessToken;
+    QMediaPlayer *m_mediaPlayer;
     explicit JellyfinAudioPlayer(QObject *parent = nullptr);
     JInfo jinfo;
     ~JellyfinAudioPlayer() = default;
 
-    void connectAndPlayAudio( const QString &itemId);
+    void auth( );
     void getData(const QString &id, QJsonObject, int type);
     void playAudio(QString s);
 
@@ -45,7 +46,6 @@ private:
     QSharedPointer<QNetworkRequest> request;
     void playAudioStream(const QString &streamUrl);
     QNetworkAccessManager *m_networkManager;
-    QMediaPlayer *m_mediaPlayer;
     QAudioOutput *m_audioOutput;
     QJsonDocument CreateDoc(QString api, QJsonObject json);
 

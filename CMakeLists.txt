@@ -24,6 +24,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         src/jellyfin.h src/jellyfin.cpp
+        resources.qrc
+        src/ltree.h src/ltree.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET japp APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -42,6 +44,8 @@ else()
         )
     endif()
 endif()
+
+target_include_directories(japp PRIVATE src/)
 
 target_link_libraries(japp PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt6::Network Qt6::Multimedia)
 
