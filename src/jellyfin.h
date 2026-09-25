@@ -12,7 +12,7 @@
 
 class JInfo {
 public:
-    QString server, uid, pwd;
+    QString server, uid, pwd, sid;
     JInfo() {}
     JInfo(QString s, QString u, QString p):server(s), uid(u), pwd(p) {
     }
@@ -22,25 +22,32 @@ class JellyfinAudioPlayer : public QObject {
     Q_OBJECT
 
 public:
+    QString m_accessToken;
     explicit JellyfinAudioPlayer(QObject *parent = nullptr);
     JInfo jinfo;
     ~JellyfinAudioPlayer() = default;
 
-    // Start the process: Login -> Get Token -> Build Stream -> Play
     void connectAndPlayAudio( const QString &itemId);
+    void getData(const QString &id, QJsonObject, int type);
+    void playAudio(QString s);
 
+signals:
+    void emitConnected();
+    void emitData(QJsonDocument, int type);
 
 private slots:
-    void onAuthResponse(QNetworkReply *reply);
+    void onDataResponse(QNetworkReply *reply, int type);
     void onPlaybackStateChanged(QMediaPlayer::PlaybackState state);
     void onNetworkError(QNetworkReply::NetworkError error);
+    void onAuthResponse(QNetworkReply *reply);
+
 private:
+    QSharedPointer<QNetworkRequest> request;
     void playAudioStream(const QString &streamUrl);
     QNetworkAccessManager *m_networkManager;
     QMediaPlayer *m_mediaPlayer;
     QAudioOutput *m_audioOutput;
+    QJsonDocument CreateDoc(QString api, QJsonObject json);
 
-    QString m_serverUrl;
     QString m_itemId;
-    QString m_accessToken;
 };
